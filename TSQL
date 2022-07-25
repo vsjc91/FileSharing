@@ -274,6 +274,7 @@ CREATE TABLE #tmp_rollup (
 
 
 CREATE INDEX IX_#tmp_rollup_DriverResolution ON #tmp_rollup(PartMd5, CartonMd5, MaxCurrentAsOf) INCLUDE ( DriverRootId, Id );
+CREATE INDEX IX_#tmp_rollup_FallbackResolution ON #tmp_rollup(PartMd5, CartonMd5, FallbackGuideValue) INCLUDE ( DriverRootId, Id );
 CREATE INDEX IX_#tmp_rollup_SubjectMd5 ON #tmp_rollup(SubjectMd5, Id);
 CREATE INDEX IX_#tmp_rollup_ResolvedSourceTally ON #tmp_rollup(ResolvedSourceTally, Id);
 
