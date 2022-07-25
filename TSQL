@@ -1,0 +1,319 @@
+/****************************************/
+-- DDL
+/****************************************/
+
+-- schemas
+        CREATE SCHEMA team;
+        GO
+
+        CREATE SCHEMA team_C2;
+        GO
+
+-- team.PartJobRoot
+
+        CREATE TABLE [team].[PartJobRoot](
+          [Id] [int] IDENTITY(1,1) NOT NULL,
+          [Created] [datetime] NULL,
+          [EngineId] [int] NOT NULL,
+          [EntityKey] [nvarchar](256) NOT NULL,
+          [NavalId] [int] NOT NULL,
+          [SearchBlob] [nvarchar](max) NULL,
+          [SubjectMd5] [binary](16) NOT NULL,
+          [SubjectUri] [nvarchar](512) NOT NULL,
+          [TimestampUtc] [datetime] NULL,
+        PRIMARY KEY CLUSTERED 
+        (
+          [Id] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+        UNIQUE NONCLUSTERED 
+        (
+          [SubjectMd5] ASC,
+          [NavalId] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+        GO
+
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobRoot_NavalId_SubjectMd5] ON [team].[PartJobRoot]
+        (
+          [NavalId] ASC,
+          [SubjectMd5] ASC
+        )
+        INCLUDE([Id],[EngineId]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobRoot_TimestampUtc] ON [team].[PartJobRoot]
+        (
+          [TimestampUtc] ASC
+        )
+        INCLUDE([Id]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+-- team.PartJobMd5
+
+        CREATE TABLE [team].[PartJobMd5](
+          [Id] [int] IDENTITY(1,1) NOT NULL,
+          [Created] [datetime] NULL,
+          [RootId] [int] NOT NULL,
+          [LastModified] [datetime] NULL,
+          [PartId] [int] NOT NULL,
+          [Value] [binary](16) NULL,
+        PRIMARY KEY CLUSTERED 
+        (
+          [Id] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+        UNIQUE NONCLUSTERED 
+        (
+          [RootId] ASC,
+          [PartId] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        GO
+
+        ALTER TABLE [team].[PartJobMd5]  WITH CHECK ADD FOREIGN KEY([RootId])
+        REFERENCES [team].[PartJobRoot] ([Id])
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobMd5_LastModified] ON [team].[PartJobMd5]
+        (
+          [LastModified] ASC
+        )
+        INCLUDE([Id]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobMd5_PartId_RootId] ON [team].[PartJobMd5]
+        (
+          [PartId] ASC,
+          [RootId] ASC
+        )
+        INCLUDE([Id],[Value]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobMd5_PartId_Value] ON [team].[PartJobMd5]
+        (
+          [PartId] ASC,
+          [Value] ASC
+        )
+        INCLUDE([Id],[RootId]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+-- team_C2.PartRegister
+
+        CREATE TABLE [team_C2].[PartRegister](
+          [Id] [int] IDENTITY(1,1) NOT NULL,
+          [AnchorLowMd5] [binary](16) NOT NULL,
+          [MemberHighMd5] [binary](16) NOT NULL,
+        PRIMARY KEY CLUSTERED 
+        (
+          [Id] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+        UNIQUE NONCLUSTERED 
+        (
+          [AnchorLowMd5] ASC,
+          [MemberHighMd5] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartRegister_MemberHighMd5_AnchorLowMd5] ON [team_C2].[PartRegister]
+        (
+          [MemberHighMd5] ASC,
+          [AnchorLowMd5] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+-- team_C2.CartonRegister
+
+        CREATE TABLE [team_C2].[CartonRegister](
+          [Id] [int] IDENTITY(1,1) NOT NULL,
+          [AnchorLowMd5] [binary](16) NOT NULL,
+          [MemberHighMd5] [binary](16) NOT NULL,
+        PRIMARY KEY CLUSTERED 
+        (
+          [Id] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+        UNIQUE NONCLUSTERED 
+        (
+          [AnchorLowMd5] ASC,
+          [MemberHighMd5] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_CartonRegister_MemberHighMd5_AnchorLowMd5] ON [team_C2].[CartonRegister]
+        (
+          [MemberHighMd5] ASC,
+          [AnchorLowMd5] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+-- team.PartJobHappened
+
+        CREATE TABLE [team].[PartJobHappened](
+          [Id] [int] IDENTITY(1,1) NOT NULL,
+          [Created] [datetime] NULL,
+          [RootId] [int] NOT NULL,
+          [LastModified] [datetime] NULL,
+          [PartId] [int] NOT NULL,
+          [Value] [datetime] MASKED WITH (FUNCTION = 'default()') NULL,
+        PRIMARY KEY CLUSTERED 
+        (
+          [Id] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+        UNIQUE NONCLUSTERED 
+        (
+          [RootId] ASC,
+          [PartId] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        GO
+
+        ALTER TABLE [team].[PartJobHappened]  WITH CHECK ADD FOREIGN KEY([RootId])
+        REFERENCES [team].[PartJobRoot] ([Id])
+        GO
+
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobHappened_LastModified] ON [team].[PartJobHappened]
+        (
+          [LastModified] ASC
+        )
+        INCLUDE([Id]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobHappened_PartId_RootId] ON [team].[PartJobHappened]
+        (
+          [PartId] ASC,
+          [RootId] ASC
+        )
+        INCLUDE([Id],[Value]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobHappened_PartId_Value] ON [team].[PartJobHappened]
+        (
+          [PartId] ASC,
+          [Value] ASC
+        )
+        INCLUDE([Id],[RootId]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+-- team.PartJobReferrer
+
+
+        CREATE TABLE [team].[PartJobReferrer](
+          [Id] [int] IDENTITY(1,1) NOT NULL,
+          [Created] [datetime] NULL,
+          [RootId] [int] NOT NULL,
+          [LastModified] [datetime] NULL,
+          [PartId] [int] NOT NULL,
+          [RefdSubjectMd5] [binary](16) NULL,
+        PRIMARY KEY CLUSTERED 
+        (
+          [Id] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+        UNIQUE NONCLUSTERED 
+        (
+          [RootId] ASC,
+          [PartId] ASC
+        )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        GO
+
+        ALTER TABLE [team].[PartJobReferrer]  WITH CHECK ADD FOREIGN KEY([RootId])
+        REFERENCES [team].[PartJobRoot] ([Id])
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobReferrer_LastModified] ON [team].[PartJobReferrer]
+        (
+          [LastModified] ASC
+        )
+        INCLUDE([Id]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobReferrer_PartId_RootId] ON [team].[PartJobReferrer]
+        (
+          [PartId] ASC,
+          [RootId] ASC
+        )
+        INCLUDE([Id],[RefdSubjectMd5]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+        CREATE NONCLUSTERED INDEX [IX_PartJobReferrer_PartId_RefdSubjectMd5] ON [team].[PartJobReferrer]
+        (
+          [PartId] ASC,
+          [RefdSubjectMd5] ASC
+        )
+        INCLUDE([Id],[RootId]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+        GO
+
+
+
+/****************************************/
+-- a) create temp table
+/****************************************/
+
+CREATE TABLE #tmp_rollup (
+  Id int IDENTITY(1, 1) PRIMARY KEY,
+  CartonMd5 binary(16),
+  DestinationRootId int,
+  DriverRootId int,
+  EngineId int,
+  EntityKey nvarchar(256),
+  FallbackGuideRootId int,
+  FallbackGuideValue datetime,
+  LikelyNotCurrentAsOf datetime,
+  LikelyPartTime bit,
+  MaxCurrentAsOf datetime,
+  MaxPosSourceTally int,
+  MinNegSourceTally int,
+  NavalId int,
+  PartMd5 binary(16),
+  ResolvedSourceTally int,
+  SubjectMd5 binary(16),
+  SubjectUri nvarchar(512)
+);
+
+
+CREATE INDEX IX_#tmp_rollup_DriverResolution ON #tmp_rollup(PartMd5, CartonMd5, MaxCurrentAsOf) INCLUDE ( DriverRootId, Id );
+CREATE INDEX IX_#tmp_rollup_SubjectMd5 ON #tmp_rollup(SubjectMd5, Id);
+CREATE INDEX IX_#tmp_rollup_ResolvedSourceTally ON #tmp_rollup(ResolvedSourceTally, Id);
+
+/****************************************/
+-- b) populate temp table
+/****************************************/
+
+-- step not shown
+
+/****************************************/
+-- c) set FallbackGuideRootId
+/****************************************/
+
+WITH cte1 AS (
+SELECT MIN(x_root.Id) AS DriverRootId,
+t.Id AS TempId
+FROM team.PartJobRoot x_root
+JOIN team.PartJobMd5 x_Partmd5
+    ON x_Partmd5.RootId = x_root.Id
+    AND x_Partmd5.PartId = ( 418 )
+JOIN team_C2.PartRegister x_Partmd5_concord
+    ON x_Partmd5_concord.MemberHighMd5 = x_Partmd5.Value
+JOIN team.PartJobMd5 x_Cartonmd5
+    ON x_Cartonmd5.RootId = x_root.Id
+    AND x_Cartonmd5.PartId = ( 411 )
+JOIN team_C2.CartonRegister x_Cartonmd5_concord
+    ON x_Cartonmd5_concord.MemberHighMd5 = x_Cartonmd5.Value
+JOIN team.PartJobHappened x_maxcurrentasof
+    ON x_maxcurrentasof.RootId = x_root.Id
+    AND x_maxcurrentasof.PartId = ( 417 )
+JOIN team.PartJobReferrer fval
+    ON fval.RootId = x_root.Id
+    AND fval.PartId = ( 415 )
+    AND fval.RefdSubjectMd5 IS NOT NULL
+JOIN #tmp_rollup t ON t.PartMd5 = x_Partmd5_concord.AnchorLowMd5
+ AND t.CartonMd5 = x_Cartonmd5_concord.AnchorLowMd5
+ AND t.FallbackGuideValue = x_maxcurrentasof.Value
+GROUP BY t.Id
+)
+UPDATE t
+SET FallbackGuideRootId = COALESCE( t.DriverRootId, c.DriverRootId )
+FROM cte1 c
+JOIN #tmp_rollup t ON t.Id = c.TempId;
