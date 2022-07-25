@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ShowPlanXML xmlns="http://schemas.microsoft.com/sqlserver/2004/07/showplan" Version="1.563" Build="16.0.312.228">
+  <BatchSequence>
+    <Batch>
+      <Statements>
+        <StmtSimple StatementText="WITH cte1 AS (&#xD;&#xA;SELECT MIN(x_root.Id) AS DriverRootId,&#xD;&#xA;t.Id AS TempId&#xD;&#xA;FROM team.PartJobRoot x_root&#xD;&#xA;-- Uxs&#xD;&#xA;JOIN team.PartJobMd5 x_Partmd5&#xD;&#xA;    ON x_Partmd5.RootId = x_root.Id&#xD;&#xA;    AND x_Partmd5.PartId = ( 418 )&#xD;&#xA;JOIN team_C2.PartRegister x_Partmd5_concord&#xD;&#xA;    ON x_Partmd5_concord.MemberHighMd5 = x_Partmd5.Value&#xD;&#xA;JOIN team.PartJobMd5 x_Cartonmd5&#xD;&#xA;    ON x_Cartonmd5.RootId = x_root.Id&#xD;&#xA;    AND x_Cartonmd5.PartId = ( 411 )&#xD;&#xA;JOIN team_C2.CartonRegister x_Cartonmd5_concord&#xD;&#xA;    ON x_Cartonmd5_concord.MemberHighMd5 = x_Cartonmd5.Value&#xD;&#xA;-- Driver&#xD;&#xA;JOIN team.PartJobHappened x_maxcurrentasof&#xD;&#xA;    ON x_maxcurrentasof.RootId = x_root.Id&#xD;&#xA;    AND x_maxcurrentasof.PartId = ( 417 )&#xD;&#xA;&#xD;&#xA;-- fallback guide&#xD;&#xA;JOIN team.PartJobReferrer fval&#xD;&#xA;    ON fval.RootId = x_root.Id&#xD;&#xA;    AND fval.PartId = ( 415 )&#xD;&#xA;    AND fval.RefdSubjectMd5 IS NOT NULL&#xD;&#xA;JOIN #tmp_rollup t ON t.PartMd5 = x_Partmd5_concord.AnchorLowMd5&#xD;&#xA; AND t.CartonMd5 = x_Cartonmd5_concord.AnchorLowMd5&#xD;&#xA; AND t.FallbackGuideValue = x_maxcurrentasof.Value&#xD;&#xA;GROUP BY t.Id&#xD;&#xA;)&#xD;&#xA;UPDATE t&#xD;&#xA;SET FallbackGuideRootId = COALESCE( t.DriverRootId, c.DriverRootId )&#xD;&#xA;FROM cte1 c&#xD;&#xA;JOIN #tmp_rollup t ON t.Id = c.TempId" StatementId="1" StatementCompId="3" StatementType="UPDATE" StatementSqlHandle="0x09002C1A7FC03C6DACDE673FCCB615C5DD710000000000000000000000000000000000000000000000000000" DatabaseContextSettingsId="3" ParentObjectId="0" BatchSqlHandle="0x0200000068D3E41B2E9B599854C06DFBE858677C0108463F0000000000000000000000000000000000000000" StatementParameterizationType="0" RetrievedFromCache="false" StatementSubTreeCost="97.5222" StatementEstRows="1" SecurityPolicyApplied="false" StatementOptmLevel="FULL" QueryHash="0x100F3CBE7786EE94" QueryPlanHash="0xCA3E13BD70708145" StatementOptmEarlyAbortReason="TimeOut" CardinalityEstimationModelVersion="150" BatchModeOnRowStoreUsed="true">
+          <StatementSetOptions QUOTED_IDENTIFIER="true" ARITHABORT="false" CONCAT_NULL_YIELDS_NULL="true" ANSI_NULLS="true" ANSI_PADDING="true" ANSI_WARNINGS="true" NUMERIC_ROUNDABORT="false"></StatementSetOptions>
+          <QueryPlan CachedPlanSize="512" CompileTime="481" CompileCPU="481" CompileMemory="17616">
+            <ThreadStat Branches="1"></ThreadStat>
+            <MemoryGrantInfo SerialRequiredMemory="12288" SerialDesiredMemory="2481784" GrantedMemory="0" MaxUsedMemory="0"></MemoryGrantInfo>
+            <OptimizerHardwareDependentProperties EstimatedAvailableMemoryGrant="544256" EstimatedPagesCached="408192" EstimatedAvailableDegreeOfParallelism="6" MaxCompileMemory="40078728"></OptimizerHardwareDependentProperties>
+            <OptimizerStatsUsage>
+              <StatisticsInfo LastUpdate="2022-07-24T05:16:33.17" ModificationCount="1200" SamplingPercent="12.9714" Statistics="[UQ__PartMa__2279849251467A56]" Table="[PartRegister]" Schema="[team_C2]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:16.85" ModificationCount="77794" SamplingPercent="1.98025" Statistics="[IX_PartJobMd5_PartId_Value]" Table="[PartJobMd5]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T05:14:29.53" ModificationCount="8702" SamplingPercent="30.1109" Statistics="[IX_CartonRegister_MemberHighMd5_AnchorLowMd5]" Table="[CartonRegister]" Schema="[team_C2]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:18.20" ModificationCount="77794" SamplingPercent="1.98637" Statistics="[_WA_Sys_00000006_7BB2EBD5]" Table="[PartJobMd5]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:16.42" ModificationCount="77794" SamplingPercent="1.98637" Statistics="[UQ__PartJo__98D24D62FB139E18]" Table="[PartJobMd5]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:21.75" ModificationCount="67832" SamplingPercent="1.99876" Statistics="[IX_PartJobReferrer_PartId_RefdSubjectMd5]" Table="[PartJobReferrer]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:21.89" ModificationCount="67832" SamplingPercent="2.12033" Statistics="[PK__PartJo__3214EC07B939EE97]" Table="[PartJobReferrer]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T05:16:33.49" ModificationCount="1200" SamplingPercent="12.875" Statistics="[IX_PartRegister_MemberHighMd5_AnchorLowMd5]" Table="[PartRegister]" Schema="[team_C2]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:23.64" ModificationCount="67832" SamplingPercent="1.95186" Statistics="[IX_PartJobReferrer_PartId_RootId]" Table="[PartJobReferrer]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.44" ModificationCount="0" SamplingPercent="6.2106" Statistics="[PK__#tmp_rol__3214EC07C333E809]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.21" ModificationCount="0" SamplingPercent="6.10516" Statistics="[_WA_Sys_00000002_BB5FD79B]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T04:03:04.19" ModificationCount="10288" SamplingPercent="100" Statistics="[IX_PartJobHappened_PartId_Value]" Table="[PartJobHappened]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:20:35.96" ModificationCount="38897" SamplingPercent="1.78639" Statistics="[PK__PartJo__3214EC0799895F87]" Table="[PartJobRoot]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.25" ModificationCount="0" SamplingPercent="5.46476" Statistics="[_WA_Sys_0000000B_BB5FD79B]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T05:16:34.67" ModificationCount="1200" SamplingPercent="12.9714" Statistics="[PK__PartMa__3214EC071E515A7E]" Table="[PartRegister]" Schema="[team_C2]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T05:14:29.28" ModificationCount="8702" SamplingPercent="29.3657" Statistics="[UQ__CartonM__227984921A2D1355]" Table="[CartonRegister]" Schema="[team_C2]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:47.96" ModificationCount="0" SamplingPercent="5.7788" Statistics="[IX_#tmp_rollup_ResolvedSourceTally]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.41" ModificationCount="0" SamplingPercent="5.7788" Statistics="[IX_#tmp_rollup_SubjectMd5]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T04:03:02.53" ModificationCount="10288" SamplingPercent="100" Statistics="[IX_PartJobHappened_PartId_RootId]" Table="[PartJobHappened]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:16.03" ModificationCount="67832" SamplingPercent="2.00234" Statistics="[UQ__PartJo__98D24D62A75239F6]" Table="[PartJobReferrer]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.16" ModificationCount="0" SamplingPercent="5.7788" Statistics="[IX_#tmp_rollup_DriverResolution]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T04:03:05.35" ModificationCount="25994" SamplingPercent="100" Statistics="[_WA_Sys_00000006_0077A0F2]" Table="[PartJobHappened]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T05:14:30.10" ModificationCount="8702" SamplingPercent="29.3657" Statistics="[PK__CartonM__3214EC075E592E52]" Table="[CartonRegister]" Schema="[team_C2]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.35" ModificationCount="0" SamplingPercent="6.10516" Statistics="[_WA_Sys_00000008_BB5FD79B]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-25T07:55:48.31" ModificationCount="0" SamplingPercent="5.7788" Statistics="[IX_#tmp_rollup_FallbackResolution]" Table="[#tmp_rollup_________________________________________________________________________________________________________000000D3918E]" Schema="[dbo]" Database="[tempdb]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T12:56:57.67" ModificationCount="28276" SamplingPercent="1.97044" Statistics="[_WA_Sys_00000006_0A010B2C]" Table="[PartJobReferrer]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-24T04:02:58.73" ModificationCount="10288" SamplingPercent="100" Statistics="[UQ__PartJo__98D24D62D1B2A2B5]" Table="[PartJobHappened]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:17.06" ModificationCount="77794" SamplingPercent="2.03596" Statistics="[PK__PartJo__3214EC0798B9033D]" Table="[PartJobMd5]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+              <StatisticsInfo LastUpdate="2022-07-22T16:03:18.04" ModificationCount="77794" SamplingPercent="2.03912" Statistics="[IX_PartJobMd5_PartId_RootId]" Table="[PartJobMd5]" Schema="[team]" Database="[6d207982-56b5-4f19-b0ff-94b111c477da]"></StatisticsInfo>
+            </OptimizerStatsUsage>
+            <RelOp NodeId="0" PhysicalOp="Clustered Index Update" LogicalOp="Update" EstimateRows="1" EstimateIO="0.01" EstimateCPU="1e-06" AvgRowSize="9" EstimatedTotalSubtreeCost="97.5222" Parallel="0" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+              <OutputList></OutputList>
+              <Update DMLRequestSort="0">
+                <Object Database="[tempdb]" Schema="[dbo]" Table="[#tmp_rollup]" Index="[PK__#tmp_rol__3214EC07C333E809]" Alias="[t]" Storage="RowStore"></Object>
+                <SetPredicate>
+                  <ScalarOperator ScalarString="#tmp_rollup.[FallbackGuideRootId] as [t].[FallbackGuideRootId] = [Expr1010]">
+                    <ScalarExpressionList>
+                      <ScalarOperator>
+                        <MultipleAssign>
+                          <Assign>
+                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="FallbackGuideRootId"></ColumnReference>
+                            <ScalarOperator>
+                              <Identifier>
+                                <ColumnReference Column="Expr1010"></ColumnReference>
+                              </Identifier>
+                            </ScalarOperator>
+                          </Assign>
+                        </MultipleAssign>
+                      </ScalarOperator>
+                    </ScalarExpressionList>
+                  </ScalarOperator>
+                </SetPredicate>
+                <RelOp NodeId="1" PhysicalOp="Parallelism" LogicalOp="Gather Streams" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0285026" AvgRowSize="15" EstimatedTotalSubtreeCost="97.5122" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                  <OutputList>
+                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                    <ColumnReference Column="Expr1010"></ColumnReference>
+                  </OutputList>
+                  <Parallelism>
+                    <RelOp NodeId="2" PhysicalOp="Compute Scalar" LogicalOp="Compute Scalar" EstimateRows="1" EstimateIO="0" EstimateCPU="1.66667e-09" AvgRowSize="15" EstimatedTotalSubtreeCost="97.4837" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                      <OutputList>
+                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                        <ColumnReference Column="Expr1010"></ColumnReference>
+                      </OutputList>
+                      <ComputeScalar>
+                        <DefinedValues>
+                          <DefinedValue>
+                            <ColumnReference Column="Expr1010"></ColumnReference>
+                            <ScalarOperator ScalarString="CASE WHEN #tmp_rollup.[DriverRootId] as [t].[DriverRootId] IS NOT NULL THEN #tmp_rollup.[DriverRootId] as [t].[DriverRootId] ELSE [Expr1008] END">
+                              <IF>
+                                <Condition>
+                                  <ScalarOperator>
+                                    <Compare CompareOp="IS NOT">
+                                      <ScalarOperator>
+                                        <Identifier>
+                                          <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="DriverRootId"></ColumnReference>
+                                        </Identifier>
+                                      </ScalarOperator>
+                                      <ScalarOperator>
+                                        <Const ConstValue="NULL"></Const>
+                                      </ScalarOperator>
+                                    </Compare>
+                                  </ScalarOperator>
+                                </Condition>
+                                <Then>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="DriverRootId"></ColumnReference>
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Then>
+                                <Else>
+                                  <ScalarOperator>
+                                    <Identifier>
+                                      <ColumnReference Column="Expr1008"></ColumnReference>
+                                    </Identifier>
+                                  </ScalarOperator>
+                                </Else>
+                              </IF>
+                            </ScalarOperator>
+                          </DefinedValue>
+                        </DefinedValues>
+                        <RelOp NodeId="3" PhysicalOp="Table Spool" LogicalOp="Eager Spool" EstimateRows="1" EstimateIO="0.0021875" EstimateCPU="1.67767e-05" AvgRowSize="19" EstimatedTotalSubtreeCost="97.4837" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                          <OutputList>
+                            <ColumnReference Column="Expr1008"></ColumnReference>
+                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="DriverRootId"></ColumnReference>
+                          </OutputList>
+                          <Spool>
+                            <RelOp NodeId="4" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1" EstimateIO="0" EstimateCPU="6.96667e-07" AvgRowSize="19" EstimatedTotalSubtreeCost="97.4815" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                              <OutputList>
+                                <ColumnReference Column="Expr1008"></ColumnReference>
+                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="DriverRootId"></ColumnReference>
+                              </OutputList>
+                              <NestedLoops Optimized="0">
+                                <OuterReferences>
+                                  <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                </OuterReferences>
+                                <RelOp NodeId="5" PhysicalOp="Hash Match" LogicalOp="Aggregate" EstimateRows="1" EstimateIO="0" EstimateCPU="0.0018807" AvgRowSize="15" EstimatedTotalSubtreeCost="97.4782" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                  <OutputList>
+                                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                    <ColumnReference Column="Expr1008"></ColumnReference>
+                                  </OutputList>
+                                  <MemoryFractions Input="1.29581e-05" Output="1.29581e-05"></MemoryFractions>
+                                  <Hash>
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Column="Expr1008"></ColumnReference>
+                                        <ScalarOperator ScalarString="MIN([partialagg1055])">
+                                          <Aggregate Distinct="0" AggType="MIN">
+                                            <ScalarOperator>
+                                              <Identifier>
+                                                <ColumnReference Column="partialagg1055"></ColumnReference>
+                                              </Identifier>
+                                            </ScalarOperator>
+                                          </Aggregate>
+                                        </ScalarOperator>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <HashKeysBuild>
+                                      <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                    </HashKeysBuild>
+                                    <RelOp NodeId="6" PhysicalOp="Nested Loops" LogicalOp="Inner Join" EstimateRows="1222.4" EstimateIO="0" EstimateCPU="0.00170285" AvgRowSize="15" EstimatedTotalSubtreeCost="97.4762" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                      <OutputList>
+                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                        <ColumnReference Column="partialagg1055"></ColumnReference>
+                                      </OutputList>
+                                      <NestedLoops Optimized="0" WithUnorderedPrefetch="1">
+                                        <OuterReferences>
+                                          <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                          <ColumnReference Column="Expr1937"></ColumnReference>
+                                        </OuterReferences>
+                                        <RelOp NodeId="8" PhysicalOp="Hash Match" LogicalOp="Aggregate" EstimateRows="2444.28" EstimateIO="0" EstimateCPU="0.230592" AvgRowSize="35" EstimatedTotalSubtreeCost="91.0746" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                          <OutputList>
+                                            <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                            <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                            <ColumnReference Column="partialagg1055"></ColumnReference>
+                                          </OutputList>
+                                          <MemoryFractions Input="0.999987" Output="0.999987"></MemoryFractions>
+                                          <Hash>
+                                            <DefinedValues>
+                                              <DefinedValue>
+                                                <ColumnReference Column="partialagg1055"></ColumnReference>
+                                                <ScalarOperator ScalarString="MIN([mydb].[team].[PartJobRoot].[Id] as [x_root].[Id])">
+                                                  <Aggregate Distinct="0" AggType="MIN">
+                                                    <ScalarOperator>
+                                                      <Identifier>
+                                                        <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Alias="[x_root]" Column="Id"></ColumnReference>
+                                                      </Identifier>
+                                                    </ScalarOperator>
+                                                  </Aggregate>
+                                                </ScalarOperator>
+                                              </DefinedValue>
+                                            </DefinedValues>
+                                            <HashKeysBuild>
+                                              <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                              <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                              <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                            </HashKeysBuild>
+                                            <BuildResidual>
+                                              <ScalarOperator ScalarString="[mydb].[team_C2].[PartRegister].[MemberHighMd5] as [x_Partmd5_concord].[MemberHighMd5] = [mydb].[team_C2].[PartRegister].[MemberHighMd5] as [x_Partmd5_concord].[MemberHighMd5] AND [mydb].[team].[PartJobReferrer].[RootId] as [fval].[RootId] = [mydb].[team].[PartJobReferrer].[RootId] as [fval].[RootId] AND #tmp_rollup.[Id] as [t].[Id] = #tmp_rollup.[Id] as [t].[Id]">
+                                                <Logical Operation="AND">
+                                                  <ScalarOperator>
+                                                    <Logical Operation="AND">
+                                                      <ScalarOperator>
+                                                        <Compare CompareOp="IS">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Compare>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Compare CompareOp="IS">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Compare>
+                                                      </ScalarOperator>
+                                                    </Logical>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Compare CompareOp="IS">
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator>
+                                                        <Identifier>
+                                                          <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </Compare>
+                                                  </ScalarOperator>
+                                                </Logical>
+                                              </ScalarOperator>
+                                            </BuildResidual>
+                                            <RelOp NodeId="9" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="231274" EstimateIO="0" EstimateCPU="0.737071" AvgRowSize="35" EstimatedTotalSubtreeCost="90.844" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                              <OutputList>
+                                                <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Alias="[x_root]" Column="Id"></ColumnReference>
+                                                <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                              </OutputList>
+                                              <MemoryFractions Input="0.999789" Output="0.999789"></MemoryFractions>
+                                              <Hash BitmapCreator="1">
+                                                <DefinedValues>
+                                                  <DefinedValue>
+                                                    <ColumnReference Column="Opt_Bitmap1429"></ColumnReference>
+                                                  </DefinedValue>
+                                                </DefinedValues>
+                                                <HashKeysBuild>
+                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                </HashKeysBuild>
+                                                <HashKeysProbe>
+                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Alias="[x_root]" Column="Id"></ColumnReference>
+                                                </HashKeysProbe>
+                                                <RelOp NodeId="10" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="304245" EstimateIO="0" EstimateCPU="1.91647" AvgRowSize="31" EstimatedTotalSubtreeCost="74.1283" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                    <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                  </OutputList>
+                                                  <MemoryFractions Input="0.949642" Output="0.949642"></MemoryFractions>
+                                                  <Hash BitmapCreator="1">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Column="Opt_Bitmap1425"></ColumnReference>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <HashKeysBuild>
+                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="RootId"></ColumnReference>
+                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="Value"></ColumnReference>
+                                                    </HashKeysBuild>
+                                                    <HashKeysProbe>
+                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                      <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                    </HashKeysProbe>
+                                                    <ProbeResidual>
+                                                      <ScalarOperator ScalarString="[mydb].[team].[PartJobMd5].[RootId] as [x_Cartonmd5].[RootId]=[mydb].[team].[PartJobReferrer].[RootId] as [fval].[RootId] AND [mydb].[team_C2].[CartonRegister].[MemberHighMd5] as [x_Cartonmd5_concord].[MemberHighMd5]=[mydb].[team].[PartJobMd5].[Value] as [x_Cartonmd5].[Value]">
+                                                        <Logical Operation="AND">
+                                                          <ScalarOperator>
+                                                            <Compare CompareOp="EQ">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="RootId"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Compare CompareOp="EQ">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="Value"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Compare>
+                                                          </ScalarOperator>
+                                                        </Logical>
+                                                      </ScalarOperator>
+                                                    </ProbeResidual>
+                                                    <RelOp NodeId="11" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="4.74248e+06" EstimatedRowsRead="4.74248e+06" EstimateIO="20.5712" EstimateCPU="0.869481" AvgRowSize="27" EstimatedTotalSubtreeCost="21.4407" TableCardinality="9.48703e+06" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                      <OutputList>
+                                                        <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="RootId"></ColumnReference>
+                                                        <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="Value"></ColumnReference>
+                                                      </OutputList>
+                                                      <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                        <DefinedValues>
+                                                          <DefinedValue>
+                                                            <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="RootId"></ColumnReference>
+                                                          </DefinedValue>
+                                                          <DefinedValue>
+                                                            <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="Value"></ColumnReference>
+                                                          </DefinedValue>
+                                                        </DefinedValues>
+                                                        <Object Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Index="[IX_PartJobMd5_PartId_RootId]" Alias="[x_Cartonmd5]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                                        <SeekPredicates>
+                                                          <SeekPredicateNew>
+                                                            <SeekKeys>
+                                                              <Prefix ScanType="EQ">
+                                                                <RangeColumns>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Cartonmd5]" Column="PartId"></ColumnReference>
+                                                                </RangeColumns>
+                                                                <RangeExpressions>
+                                                                  <ScalarOperator ScalarString="(411)">
+                                                                    <Const ConstValue="(411)"></Const>
+                                                                  </ScalarOperator>
+                                                                </RangeExpressions>
+                                                              </Prefix>
+                                                            </SeekKeys>
+                                                          </SeekPredicateNew>
+                                                        </SeekPredicates>
+                                                      </IndexScan>
+                                                    </RelOp>
+                                                    <RelOp NodeId="12" PhysicalOp="Filter" LogicalOp="Filter" EstimateRows="4.00442e+06" EstimateIO="0" EstimateCPU="1.41947" AvgRowSize="47" EstimatedTotalSubtreeCost="50.7711" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                      <OutputList>
+                                                        <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                        <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                        <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                      </OutputList>
+                                                      <Filter StartupExpression="0">
+                                                        <RelOp NodeId="13" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="4.00442e+06" EstimateIO="0" EstimateCPU="1.41947" AvgRowSize="47" EstimatedTotalSubtreeCost="50.7711" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                          <OutputList>
+                                                            <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                            <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                            <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                          </OutputList>
+                                                          <MemoryFractions Input="0.523287" Output="0.523287"></MemoryFractions>
+                                                          <Hash BitmapCreator="1">
+                                                            <DefinedValues>
+                                                              <DefinedValue>
+                                                                <ColumnReference Column="Opt_Bitmap1421"></ColumnReference>
+                                                              </DefinedValue>
+                                                            </DefinedValues>
+                                                            <HashKeysBuild>
+                                                              <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                            </HashKeysBuild>
+                                                            <HashKeysProbe>
+                                                              <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                            </HashKeysProbe>
+                                                            <RelOp NodeId="14" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="3.09619e+06" EstimatedRowsRead="3.09972e+06" EstimateIO="13.39" EstimateCPU="0.568309" AvgRowSize="27" EstimatedTotalSubtreeCost="13.9583" TableCardinality="1.05382e+07" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                              <OutputList>
+                                                                <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                              </OutputList>
+                                                              <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                <DefinedValues>
+                                                                  <DefinedValue>
+                                                                    <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                                  </DefinedValue>
+                                                                </DefinedValues>
+                                                                <Object Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Index="[IX_PartJobReferrer_PartId_RootId]" Alias="[fval]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                                                <SeekPredicates>
+                                                                  <SeekPredicateNew>
+                                                                    <SeekKeys>
+                                                                      <Prefix ScanType="EQ">
+                                                                        <RangeColumns>
+                                                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="PartId"></ColumnReference>
+                                                                        </RangeColumns>
+                                                                        <RangeExpressions>
+                                                                          <ScalarOperator ScalarString="(415)">
+                                                                            <Const ConstValue="(415)"></Const>
+                                                                          </ScalarOperator>
+                                                                        </RangeExpressions>
+                                                                      </Prefix>
+                                                                    </SeekKeys>
+                                                                  </SeekPredicateNew>
+                                                                </SeekPredicates>
+                                                                <Predicate>
+                                                                  <ScalarOperator ScalarString="[mydb].[team].[PartJobReferrer].[RefdSubjectMd5] as [fval].[RefdSubjectMd5] IS NOT NULL">
+                                                                    <Compare CompareOp="IS NOT">
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RefdSubjectMd5"></ColumnReference>
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                      <ScalarOperator>
+                                                                        <Const ConstValue="NULL"></Const>
+                                                                      </ScalarOperator>
+                                                                    </Compare>
+                                                                  </ScalarOperator>
+                                                                </Predicate>
+                                                              </IndexScan>
+                                                            </RelOp>
+                                                            <RelOp NodeId="15" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="8.28971e+06" EstimateIO="0" EstimateCPU="1.05533" AvgRowSize="47" EstimatedTotalSubtreeCost="35.1454" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                              <OutputList>
+                                                                <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                              </OutputList>
+                                                              <MemoryFractions Input="0.245077" Output="0.245077"></MemoryFractions>
+                                                              <Hash>
+                                                                <DefinedValues></DefinedValues>
+                                                                <HashKeysBuild>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                </HashKeysBuild>
+                                                                <HashKeysProbe>
+                                                                  <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="CartonMd5"></ColumnReference>
+                                                                </HashKeysProbe>
+                                                                <ProbeResidual>
+                                                                  <ScalarOperator ScalarString="#tmp_rollup.[CartonMd5] as [t].[CartonMd5]=[mydb].[team_C2].[CartonRegister].[AnchorLowMd5] as [x_Cartonmd5_concord].[AnchorLowMd5]">
+                                                                    <Compare CompareOp="EQ">
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="CartonMd5"></ColumnReference>
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                      <ScalarOperator>
+                                                                        <Identifier>
+                                                                          <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                        </Identifier>
+                                                                      </ScalarOperator>
+                                                                    </Compare>
+                                                                  </ScalarOperator>
+                                                                </ProbeResidual>
+                                                                <RelOp NodeId="16" PhysicalOp="Clustered Index Scan" LogicalOp="Clustered Index Scan" EstimateRows="530397" EstimatedRowsRead="530397" EstimateIO="2.87053" EstimateCPU="0.0972656" AvgRowSize="39" EstimatedTotalSubtreeCost="2.9678" TableCardinality="530397" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                                  <OutputList>
+                                                                    <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                    <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                  </OutputList>
+                                                                  <IndexScan Ordered="0" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                    <DefinedValues>
+                                                                      <DefinedValue>
+                                                                        <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                      </DefinedValue>
+                                                                      <DefinedValue>
+                                                                        <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                      </DefinedValue>
+                                                                    </DefinedValues>
+                                                                    <Object Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Index="[PK__CartonM__3214EC075E592E52]" Alias="[x_Cartonmd5_concord]" IndexKind="Clustered" Storage="RowStore"></Object>
+                                                                  </IndexScan>
+                                                                </RelOp>
+                                                                <RelOp NodeId="17" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="2.61627e+06" EstimateIO="0" EstimateCPU="0.820057" AvgRowSize="47" EstimatedTotalSubtreeCost="31.1222" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                                  <OutputList>
+                                                                    <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                    <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="CartonMd5"></ColumnReference>
+                                                                  </OutputList>
+                                                                  <MemoryFractions Input="0.176966" Output="0.176966"></MemoryFractions>
+                                                                  <Hash>
+                                                                    <DefinedValues></DefinedValues>
+                                                                    <HashKeysBuild>
+                                                                      <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                    </HashKeysBuild>
+                                                                    <HashKeysProbe>
+                                                                      <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="PartMd5"></ColumnReference>
+                                                                    </HashKeysProbe>
+                                                                    <ProbeResidual>
+                                                                      <ScalarOperator ScalarString="#tmp_rollup.[PartMd5] as [t].[PartMd5]=[mydb].[team_C2].[PartRegister].[AnchorLowMd5] as [x_Partmd5_concord].[AnchorLowMd5]">
+                                                                        <Compare CompareOp="EQ">
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="PartMd5"></ColumnReference>
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                          <ScalarOperator>
+                                                                            <Identifier>
+                                                                              <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                            </Identifier>
+                                                                          </ScalarOperator>
+                                                                        </Compare>
+                                                                      </ScalarOperator>
+                                                                    </ProbeResidual>
+                                                                    <RelOp NodeId="18" PhysicalOp="Index Scan" LogicalOp="Index Scan" EstimateRows="1.34486e+06" EstimatedRowsRead="1.34486e+06" EstimateIO="7.21868" EstimateCPU="0.246585" AvgRowSize="39" EstimatedTotalSubtreeCost="7.46527" TableCardinality="1.34486e+06" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                                      <OutputList>
+                                                                        <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                        <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                      </OutputList>
+                                                                      <IndexScan Ordered="0" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                        <DefinedValues>
+                                                                          <DefinedValue>
+                                                                            <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="AnchorLowMd5"></ColumnReference>
+                                                                          </DefinedValue>
+                                                                          <DefinedValue>
+                                                                            <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                          </DefinedValue>
+                                                                        </DefinedValues>
+                                                                        <Object Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Index="[UQ__PartMa__2279849251467A56]" Alias="[x_Partmd5_concord]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                                                      </IndexScan>
+                                                                    </RelOp>
+                                                                    <RelOp NodeId="19" PhysicalOp="Hash Match" LogicalOp="Inner Join" EstimateRows="1.31907e+06" EstimateIO="0" EstimateCPU="0.442077" AvgRowSize="47" EstimatedTotalSubtreeCost="22.8369" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                                      <OutputList>
+                                                                        <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="CartonMd5"></ColumnReference>
+                                                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="PartMd5"></ColumnReference>
+                                                                      </OutputList>
+                                                                      <MemoryFractions Input="0.0412295" Output="0.0412295"></MemoryFractions>
+                                                                      <Hash BitmapCreator="1">
+                                                                        <DefinedValues>
+                                                                          <DefinedValue>
+                                                                            <ColumnReference Column="Opt_Bitmap1378"></ColumnReference>
+                                                                          </DefinedValue>
+                                                                        </DefinedValues>
+                                                                        <HashKeysBuild>
+                                                                          <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="FallbackGuideValue"></ColumnReference>
+                                                                        </HashKeysBuild>
+                                                                        <HashKeysProbe>
+                                                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="Value"></ColumnReference>
+                                                                        </HashKeysProbe>
+                                                                        <ProbeResidual>
+                                                                          <ScalarOperator ScalarString="#tmp_rollup.[FallbackGuideValue] as [t].[FallbackGuideValue]=[mydb].[team].[PartJobHappened].[Value] as [x_maxcurrentasof].[Value]">
+                                                                            <Compare CompareOp="EQ">
+                                                                              <ScalarOperator>
+                                                                                <Identifier>
+                                                                                  <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="FallbackGuideValue"></ColumnReference>
+                                                                                </Identifier>
+                                                                              </ScalarOperator>
+                                                                              <ScalarOperator>
+                                                                                <Identifier>
+                                                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="Value"></ColumnReference>
+                                                                                </Identifier>
+                                                                              </ScalarOperator>
+                                                                            </Compare>
+                                                                          </ScalarOperator>
+                                                                        </ProbeResidual>
+                                                                        <RelOp NodeId="20" PhysicalOp="Index Scan" LogicalOp="Index Scan" EstimateRows="698000" EstimatedRowsRead="698000" EstimateIO="3.47275" EstimateCPU="0.127993" AvgRowSize="51" EstimatedTotalSubtreeCost="3.60075" TableCardinality="698000" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                                          <OutputList>
+                                                                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="CartonMd5"></ColumnReference>
+                                                                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="FallbackGuideValue"></ColumnReference>
+                                                                            <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="PartMd5"></ColumnReference>
+                                                                          </OutputList>
+                                                                          <IndexScan Ordered="0" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                            <DefinedValues>
+                                                                              <DefinedValue>
+                                                                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                                              </DefinedValue>
+                                                                              <DefinedValue>
+                                                                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="CartonMd5"></ColumnReference>
+                                                                              </DefinedValue>
+                                                                              <DefinedValue>
+                                                                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="FallbackGuideValue"></ColumnReference>
+                                                                              </DefinedValue>
+                                                                              <DefinedValue>
+                                                                                <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="PartMd5"></ColumnReference>
+                                                                              </DefinedValue>
+                                                                            </DefinedValues>
+                                                                            <Object Database="[tempdb]" Schema="[dbo]" Table="[#tmp_rollup]" Index="[IX_#tmp_rollup_FallbackResolution]" Alias="[t]" TableReferenceId="1" Storage="RowStore"></Object>
+                                                                          </IndexScan>
+                                                                        </RelOp>
+                                                                        <RelOp NodeId="22" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="44761.5" EstimatedRowsRead="4.47615e+06" EstimateIO="17.9742" EstimateCPU="0.819908" AvgRowSize="19" EstimatedTotalSubtreeCost="18.7941" TableCardinality="4.91859e+06" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                                          <OutputList>
+                                                                            <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                                            <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="Value"></ColumnReference>
+                                                                          </OutputList>
+                                                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                                            <DefinedValues>
+                                                                              <DefinedValue>
+                                                                                <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                                              </DefinedValue>
+                                                                              <DefinedValue>
+                                                                                <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="Value"></ColumnReference>
+                                                                              </DefinedValue>
+                                                                            </DefinedValues>
+                                                                            <Object Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Index="[IX_PartJobHappened_PartId_Value]" Alias="[x_maxcurrentasof]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                                                            <SeekPredicates>
+                                                                              <SeekPredicateNew>
+                                                                                <SeekKeys>
+                                                                                  <Prefix ScanType="EQ">
+                                                                                    <RangeColumns>
+                                                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="PartId"></ColumnReference>
+                                                                                    </RangeColumns>
+                                                                                    <RangeExpressions>
+                                                                                      <ScalarOperator ScalarString="(417)">
+                                                                                        <Const ConstValue="(417)"></Const>
+                                                                                      </ScalarOperator>
+                                                                                    </RangeExpressions>
+                                                                                  </Prefix>
+                                                                                </SeekKeys>
+                                                                              </SeekPredicateNew>
+                                                                            </SeekPredicates>
+                                                                            <Predicate>
+                                                                              <ScalarOperator ScalarString="PROBE([Opt_Bitmap1421],[mydb].[team].[PartJobHappened].[RootId] as [x_maxcurrentasof].[RootId]) AND PROBE([Opt_Bitmap1378],[mydb].[team].[PartJobHappened].[Value] as [x_maxcurrentasof].[Value])">
+                                                                                <Logical Operation="AND">
+                                                                                  <ScalarOperator>
+                                                                                    <Intrinsic FunctionName="PROBE">
+                                                                                      <ScalarOperator>
+                                                                                        <Identifier>
+                                                                                          <ColumnReference Column="Opt_Bitmap1421"></ColumnReference>
+                                                                                        </Identifier>
+                                                                                      </ScalarOperator>
+                                                                                      <ScalarOperator>
+                                                                                        <Identifier>
+                                                                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="RootId"></ColumnReference>
+                                                                                        </Identifier>
+                                                                                      </ScalarOperator>
+                                                                                    </Intrinsic>
+                                                                                  </ScalarOperator>
+                                                                                  <ScalarOperator>
+                                                                                    <Intrinsic FunctionName="PROBE">
+                                                                                      <ScalarOperator>
+                                                                                        <Identifier>
+                                                                                          <ColumnReference Column="Opt_Bitmap1378"></ColumnReference>
+                                                                                        </Identifier>
+                                                                                      </ScalarOperator>
+                                                                                      <ScalarOperator>
+                                                                                        <Identifier>
+                                                                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobHappened]" Alias="[x_maxcurrentasof]" Column="Value"></ColumnReference>
+                                                                                        </Identifier>
+                                                                                      </ScalarOperator>
+                                                                                    </Intrinsic>
+                                                                                  </ScalarOperator>
+                                                                                </Logical>
+                                                                              </ScalarOperator>
+                                                                            </Predicate>
+                                                                          </IndexScan>
+                                                                        </RelOp>
+                                                                      </Hash>
+                                                                    </RelOp>
+                                                                  </Hash>
+                                                                </RelOp>
+                                                              </Hash>
+                                                            </RelOp>
+                                                          </Hash>
+                                                        </RelOp>
+                                                        <Predicate>
+                                                          <ScalarOperator ScalarString="PROBE([Opt_Bitmap1425],[mydb].[team].[PartJobReferrer].[RootId] as [fval].[RootId],[mydb].[team_C2].[CartonRegister].[MemberHighMd5] as [x_Cartonmd5_concord].[MemberHighMd5])">
+                                                            <Intrinsic FunctionName="PROBE">
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Column="Opt_Bitmap1425"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                              <ScalarOperator>
+                                                                <Identifier>
+                                                                  <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[CartonRegister]" Alias="[x_Cartonmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                                </Identifier>
+                                                              </ScalarOperator>
+                                                            </Intrinsic>
+                                                          </ScalarOperator>
+                                                        </Predicate>
+                                                      </Filter>
+                                                    </RelOp>
+                                                  </Hash>
+                                                </RelOp>
+                                                <RelOp NodeId="24" PhysicalOp="Index Scan" LogicalOp="Index Scan" EstimateRows="4743.51" EstimatedRowsRead="4.74351e+06" EstimateIO="15.1098" EstimateCPU="0.86888" AvgRowSize="11" EstimatedTotalSubtreeCost="15.9787" TableCardinality="4.74351e+06" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Batch">
+                                                  <OutputList>
+                                                    <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Alias="[x_root]" Column="Id"></ColumnReference>
+                                                  </OutputList>
+                                                  <IndexScan Ordered="0" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                                    <DefinedValues>
+                                                      <DefinedValue>
+                                                        <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Alias="[x_root]" Column="Id"></ColumnReference>
+                                                      </DefinedValue>
+                                                    </DefinedValues>
+                                                    <Object Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Index="[IX_PartJobRoot_TimestampUtc]" Alias="[x_root]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                                    <Predicate>
+                                                      <ScalarOperator ScalarString="PROBE([Opt_Bitmap1429],[mydb].[team].[PartJobRoot].[Id] as [x_root].[Id])">
+                                                        <Intrinsic FunctionName="PROBE">
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Column="Opt_Bitmap1429"></ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                          <ScalarOperator>
+                                                            <Identifier>
+                                                              <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobRoot]" Alias="[x_root]" Column="Id"></ColumnReference>
+                                                            </Identifier>
+                                                          </ScalarOperator>
+                                                        </Intrinsic>
+                                                      </ScalarOperator>
+                                                    </Predicate>
+                                                  </IndexScan>
+                                                </RelOp>
+                                              </Hash>
+                                            </RelOp>
+                                          </Hash>
+                                        </RelOp>
+                                        <RelOp NodeId="25" PhysicalOp="Index Seek" LogicalOp="Index Seek" EstimateRows="1" EstimatedRowsRead="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="23" EstimatedTotalSubtreeCost="6.39876" TableCardinality="9.48703e+06" Parallel="1" EstimateRebinds="2443.28" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                          <OutputList></OutputList>
+                                          <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                            <DefinedValues></DefinedValues>
+                                            <Object Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Index="[IX_PartJobMd5_PartId_RootId]" Alias="[x_Partmd5]" IndexKind="NonClustered" Storage="RowStore"></Object>
+                                            <SeekPredicates>
+                                              <SeekPredicateNew>
+                                                <SeekKeys>
+                                                  <Prefix ScanType="EQ">
+                                                    <RangeColumns>
+                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Partmd5]" Column="PartId"></ColumnReference>
+                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Partmd5]" Column="RootId"></ColumnReference>
+                                                    </RangeColumns>
+                                                    <RangeExpressions>
+                                                      <ScalarOperator ScalarString="(418)">
+                                                        <Const ConstValue="(418)"></Const>
+                                                      </ScalarOperator>
+                                                      <ScalarOperator ScalarString="[mydb].[team].[PartJobReferrer].[RootId] as [fval].[RootId]">
+                                                        <Identifier>
+                                                          <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobReferrer]" Alias="[fval]" Column="RootId"></ColumnReference>
+                                                        </Identifier>
+                                                      </ScalarOperator>
+                                                    </RangeExpressions>
+                                                  </Prefix>
+                                                </SeekKeys>
+                                              </SeekPredicateNew>
+                                            </SeekPredicates>
+                                            <Predicate>
+                                              <ScalarOperator ScalarString="[mydb].[team_C2].[PartRegister].[MemberHighMd5] as [x_Partmd5_concord].[MemberHighMd5]=[mydb].[team].[PartJobMd5].[Value] as [x_Partmd5].[Value]">
+                                                <Compare CompareOp="EQ">
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[mydb]" Schema="[team_C2]" Table="[PartRegister]" Alias="[x_Partmd5_concord]" Column="MemberHighMd5"></ColumnReference>
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                  <ScalarOperator>
+                                                    <Identifier>
+                                                      <ColumnReference Database="[mydb]" Schema="[team]" Table="[PartJobMd5]" Alias="[x_Partmd5]" Column="Value"></ColumnReference>
+                                                    </Identifier>
+                                                  </ScalarOperator>
+                                                </Compare>
+                                              </ScalarOperator>
+                                            </Predicate>
+                                          </IndexScan>
+                                        </RelOp>
+                                      </NestedLoops>
+                                    </RelOp>
+                                  </Hash>
+                                </RelOp>
+                                <RelOp NodeId="26" PhysicalOp="Clustered Index Seek" LogicalOp="Clustered Index Seek" EstimateRows="1" EstimatedRowsRead="1" EstimateIO="0.003125" EstimateCPU="0.0001581" AvgRowSize="15" EstimatedTotalSubtreeCost="0.0032831" TableCardinality="698000" Parallel="1" EstimateRebinds="0" EstimateRewinds="0" EstimatedExecutionMode="Row">
+                                  <OutputList>
+                                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                    <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="DriverRootId"></ColumnReference>
+                                  </OutputList>
+                                  <IndexScan Ordered="1" ScanDirection="FORWARD" ForcedIndex="0" ForceSeek="0" ForceScan="0" NoExpandHint="0" Storage="RowStore">
+                                    <DefinedValues>
+                                      <DefinedValue>
+                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                      </DefinedValue>
+                                      <DefinedValue>
+                                        <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="DriverRootId"></ColumnReference>
+                                      </DefinedValue>
+                                    </DefinedValues>
+                                    <Object Database="[tempdb]" Schema="[dbo]" Table="[#tmp_rollup]" Index="[PK__#tmp_rol__3214EC07C333E809]" Alias="[t]" TableReferenceId="2" Storage="RowStore"></Object>
+                                    <SeekPredicates>
+                                      <SeekPredicateNew>
+                                        <SeekKeys>
+                                          <Prefix ScanType="EQ">
+                                            <RangeColumns>
+                                              <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                            </RangeColumns>
+                                            <RangeExpressions>
+                                              <ScalarOperator ScalarString="#tmp_rollup.[Id] as [t].[Id]">
+                                                <Identifier>
+                                                  <ColumnReference Table="#tmp_rollup" Alias="[t]" Column="Id"></ColumnReference>
+                                                </Identifier>
+                                              </ScalarOperator>
+                                            </RangeExpressions>
+                                          </Prefix>
+                                        </SeekKeys>
+                                      </SeekPredicateNew>
+                                    </SeekPredicates>
+                                  </IndexScan>
+                                </RelOp>
+                              </NestedLoops>
+                            </RelOp>
+                          </Spool>
+                        </RelOp>
+                      </ComputeScalar>
+                    </RelOp>
+                  </Parallelism>
+                </RelOp>
+              </Update>
+            </RelOp>
+          </QueryPlan>
+        </StmtSimple>
+      </Statements>
+    </Batch>
+  </BatchSequence>
+</ShowPlanXML>
